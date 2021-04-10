@@ -1,8 +1,8 @@
 import React from 'react'
-import {Card} from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 import '../../styles/global.css'
 
-const CardInicial = ({title, content}) => (
+const CardInicial = ({ title, content }) => (
     <Card className="card m-4" style={{ width: '18rem' }}>
         <Card.Body>
             <Card.Title>
