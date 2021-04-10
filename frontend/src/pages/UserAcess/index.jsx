@@ -1,5 +1,6 @@
 import React from 'react'
 import CardInicial from '../../components/Card'
+import { Button } from 'react-bootstrap'
 import { Formik } from 'formik'
 
 export default function index() {
@@ -53,9 +54,12 @@ export default function index() {
                                 value={values.password}
                             />
                             {errors.password && touched.password && errors.password}
-                            <button type="submit" disabled={isSubmitting}>
+                            <Button 
+                            variant="primary" 
+                            type="submit" 
+                            disabled={isSubmitting}>
                                 Submit
-           </button>
+                            </Button>
                         </form>
                     )}
                 </Formik>
