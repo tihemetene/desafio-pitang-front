@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import CardInicial from '../../components/Card'
-import { Button, Container, Form } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik'
+import { Button, Container, Form } from 'react-bootstrap'
+import "react-datepicker/dist/react-datepicker.css";
+import '../../styles/global.css'
 
 
-const UserAcess = () => {
+const UserAcess = ({history}) => {
     const [startDate, setStartDate] = useState(new Date());
 
     return (
-        <Container className="mt-4">
-            <CardInicial title="Agendamento" content="">
+        <Container className="mt-4 page-user">
+            <CardInicial title="Agendamento do paciente">
                 <Formik
-                    initialValues={{ email: '', password: '' }}
+                    initialValues={{ email: ''}}
                     validate={values => {
                         const errors = {};
                         if (!values.email) {
@@ -57,29 +59,36 @@ const UserAcess = () => {
                             <Form.Group>
                                 <Form.Label className>Nome</Form.Label>
                                 <Form.Control
-                                    type="password"
-                                    name="password"
+                                    type="name"
+                                    name="name"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                                    value={values.password}
+                                    value={values.name}
+                                    placeHolder="Seu nome"
                                 />
-                                {errors.password && touched.password && errors.password}
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Idade</Form.Label>
-                                <Form.Control></Form.Control>
+                                <Form.Control 
+                                type="age"
+                                name="age"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                valeu={values.age}
+                                placeHolder="Sua idade"></Form.Control>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Label>Data da vacinação</Form.Label>
-                                <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
+                                <Form.Label className="mr-2">Data da vacinação</Form.Label>
+                            <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
                             </Form.Group>
                                 <Button
                                     variant="success"
                                     type="submit"
                                     disabled={isSubmitting}>
-                                    Submit
+                                    Cadastrar
                             </Button>
+                            <a className="btn btn-secondary ml-2" href="/">Voltar</a>
                         </Form>
                     )}
                 </Formik>
