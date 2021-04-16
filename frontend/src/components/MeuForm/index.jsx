@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
-import CardInicial from '../Card'
 import DatePicker from 'react-datepicker'
-import { withFormik, Form, Field, ErrorMessage } from 'formik'
-import { Button, Container } from 'react-bootstrap'
+import { withFormik, Field, ErrorMessage, Form } from 'formik'
+import { Button } from 'react-bootstrap'
 import "react-datepicker/dist/react-datepicker.css";
 import '../../styles/global.css'
 import * as Yup from 'yup';
 
 const schema = Yup.object().shape({
     cpf: Yup.string()
-        .required('Informe o CPF!').length(11),
+        .required('Informe o CPF!').length(11, 'CPF inválido!'),
     name: Yup.string()
         .required('Nome obrigatório.')
         .min(1, 'Nome deve conter mais que um caractere.')
@@ -31,49 +30,45 @@ const comFormik = withFormik({
     validateOnBlur: true,
     displayName: 'Formik',
     validationSchema: schema
-});
+})
 
-const MeuForm = () => {
+const MeuForm = props => {
     const [startDate, setStartDate] = useState(new Date());
     return (
-        <Container className="mt-4 page-user">
-            <CardInicial title="Agendamento do paciente">
-                <Form action="handleSubmit">
-                    <Form.Group>
-                        <Form.Label className="mr-4">CPF</Form.Label>
+                <Form method="POST">
+                    <div>
+                        <span>CPF</span>
                         <Field
                             name="cpf"
-                            placeholder="___.___.___-__"
+                            placeholder="CPF"
                         />
                         <ErrorMessage name="cpf" />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className>Nome</Form.Label>
-                        <Form.Control
+                    </div>
+                    <hr />
+                    <div>
+                        <span>Nome</span>
+                        <Field
                             name="name"
                             placeHolder="Seu nome"
                         />
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label>Idade</Form.Label>
-                        <Form.Control
+                        <ErrorMessage name="name" />
+                    </div>
+                    <hr />
+                    <div>
+                        <span>Idade</span>
+                        <Field
                             name="age"
-                            placeHolder="Sua idade"></Form.Control>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className="mr-2">Data da vacinação</Form.Label>
+                            placeHolder="Sua idade" />
+                            <ErrorMessage name="age" />
+                    </div>
+                    <hr />
+                    <div>
+                        <span className="mr-2">Data da vacinação</span>
                         <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
-                    </Form.Group>
-                    <Button
-                        variant="success"
-                        type="submit"
-                    >Cadastrar
-                            </Button>
-                    <a className="btn btn-secondary ml-2" href="/">Voltar</a>
+                    </div>
+                    <Button className="mt-3" variant="success" type="submit"> Cadastrar </Button>
+                    <a className="btn btn-secondary ml-2 mt-3" href="/">Voltar</a>
                 </Form>
-            </CardInicial>
-        </Container>
     )
 };
 

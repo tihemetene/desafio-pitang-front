@@ -1,3 +1,19 @@
 .card-header{
     background-color: rgb(66 202 42 / 30%)!important;
 }
+
+input {
+    height: 30px;
+    padding: 5px 15px;
+    margin: 10px;
+    border-color: black;
+    border-radius: 5px;
+    border: 1px solid;
+}
+span{
+    margin-right: 4px;
+}
+
+Button{
+    align-self: flex-end;
+}
