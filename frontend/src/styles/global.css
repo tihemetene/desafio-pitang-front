@@ -14,6 +14,6 @@ span{
     margin-right: 4px;
 }
 
-Button{
-    align-self: flex-end;
+ErrorMessage{
+    color: red!important;
 }
