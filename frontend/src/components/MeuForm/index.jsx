@@ -70,12 +70,6 @@ const MeuForm = props => {
 
 //    const isNewUser = id === 'new';
 
-//  useEffect(() => {
-//      if (!isNewUser) {
-//        fetchUser();
-//      }
-//    }, [id, isNewUser]);
-
 //  const fetchUser = async () => {
 //      const response = await api.get(`/user/${id}`);
 //        setForm(response.data.user);
