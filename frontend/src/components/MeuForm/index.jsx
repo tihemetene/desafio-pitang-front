@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import DatePicker, {registerLocale} from 'react-datepicker'
 import { withFormik, Field, ErrorMessage, Form } from 'formik'
 import { Button } from 'react-bootstrap'
+import { toast } from 'react-toastify';
 import "react-datepicker/dist/react-datepicker.css";
 import '../../styles/global.css'
 import * as Yup from 'yup';
 import axios from '../../util/api'
 import br from 'date-fns/locale/pt-BR'
+import FormContext from '../../FormContext'
 
 registerLocale("br", br)
 
@@ -41,7 +43,7 @@ const comFormik = withFormik({
 const MeuForm = props => {
     const [startDateAge, setStartDateAge] = useState(new Date());
     const [startDate, setStartDate] = useState(new Date());
-    // const isNewUser = id === 'new';
+    // const [dados, setDados] = useContext(FormContext)
     // const [form, setForm] = useState({
     //     cpf: '', 
     //     name: '', 
@@ -49,16 +51,35 @@ const MeuForm = props => {
     //     data :'',
     // })
 
-    // useEffect(() => {
-    //     if (!isNewUser) {
-    //       fetchUser();
-    //     }
-    //   }, [id, isNewUser]);
+    // const onAddForm = async(event) =>{
+    //     event.preventDefault();
 
-    // const fetchUser = async () => {
-    //     const response = await api.get(`/user/${id}`);
-    //     setForm(response.data.user);
-    //   };
+    //     const data = {
+    //         completed: false,
+    //         title: form,
+    //     };
+    //     try{
+    //         const response = await axios.post('/user', data);
+    //         setDados([...dados, response.data.data]);
+    //         setForm('');
+    //     }catch(e){
+    //         toast.error(e.message);
+    //     }
+
+    // }
+
+//    const isNewUser = id === 'new';
+
+//  useEffect(() => {
+//      if (!isNewUser) {
+//        fetchUser();
+//      }
+//    }, [id, isNewUser]);
+
+//  const fetchUser = async () => {
+//      const response = await api.get(`/user/${id}`);
+//        setForm(response.data.user);
+//    };
 
     let dataAtual = new Date();
     let handleColor = time => {

@@ -10,7 +10,8 @@ const Home = () =>
         >
             <Card.Body>
                 <Row>
-                    <span>Bem vindo ao portal MediHouse para o agendamento da vacinação!</span>
+                    <span>Bem vindo ao portal MediHouse para o agendamento da vacinação! Escolha a opção abaixo caso queira realizar um 
+                        agendamento ou se for um enfermeiro!</span>
                 </Row>
                 <Row>
                     <Card.Link href="/user-access">Acesso paciente</Card.Link>
