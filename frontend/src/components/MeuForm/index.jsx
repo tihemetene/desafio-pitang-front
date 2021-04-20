@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState } from 'react'
 import DatePicker, {registerLocale} from 'react-datepicker'
 import { withFormik, Field, ErrorMessage, Form } from 'formik'
 import { Button } from 'react-bootstrap'
@@ -8,7 +8,6 @@ import '../../styles/global.css'
 import * as Yup from 'yup';
 import axios from '../../util/api'
 import br from 'date-fns/locale/pt-BR'
-import FormContext from '../../FormContext'
 
 registerLocale("br", br)
 
@@ -19,10 +18,10 @@ const schema = Yup.object().shape({
         .required('Nome obrigatório.')
         .min(1, 'Nome deve conter mais que um caractere.')
         .max(100, 'Nome deve conter menos que 100 caracteres'),
-    age: Yup.date()
+    age: Yup.number()
         .default(function () {return new Date();})
         .required('Inserção da idade é obrigatório.')
-        .min('1/1/1900', 'Idade inválida')
+        .min(0, 'Idade inválida')
 })
 
 
@@ -43,37 +42,30 @@ const comFormik = withFormik({
 const MeuForm = props => {
     const [startDateAge, setStartDateAge] = useState(new Date());
     const [startDate, setStartDate] = useState(new Date());
-    // const [dados, setDados] = useContext(FormContext)
-    // const [form, setForm] = useState({
-    //     cpf: '', 
-    //     name: '', 
-    //     age: '', 
-    //     data :'',
-    // })
+    const [form, setForm] = useState({
+         cpf: '', 
+         name: '', 
+         age: '', 
+         date :'',
+    })
 
-    // const onAddForm = async(event) =>{
-    //     event.preventDefault();
 
-    //     const data = {
-    //         completed: false,
-    //         title: form,
-    //     };
-    //     try{
-    //         const response = await axios.post('/user', data);
-    //         setDados([...dados, response.data.data]);
-    //         setForm('');
-    //     }catch(e){
-    //         toast.error(e.message);
-    //     }
+    const addForm = async (event) =>{
+        try{
+            await axios.post('/user', form);
+            toast.success('Paciente cadastrado!');
+            setForm('');
+        }catch(e){
+            toast.error(e.message);
+        }
+    }
 
-    // }
-
-//    const isNewUser = id === 'new';
-
-//  const fetchUser = async () => {
-//      const response = await api.get(`/user/${id}`);
-//        setForm(response.data.user);
-//    };
+    const onChange = ({ target: { name, value } }) => {
+        setForm({
+          ...form,
+          [name]: value,
+        });
+      };
 
     let dataAtual = new Date();
     let handleColor = time => {
@@ -82,13 +74,16 @@ const MeuForm = props => {
 
 
     return (
-                <Form>
+                <Form onSubmit={addForm}>
                     <div>
                         <span>CPF</span>
                         <br />
                         <Field
+                            onChange={onChange}
                             name="cpf"
                             placeholder="CPF"
+                            type="text"
+                            value={form.cpf}
                         />
                         <ErrorMessage className="ml-2" style={{color: "red"}} name="cpf" />
                     </div>
@@ -98,10 +93,25 @@ const MeuForm = props => {
                         <span>Nome</span>
                         <br />
                         <Field
+                            onChange={onChange}
                             name="name"
                             placeHolder="Seu nome"
+                            type="text"
+                            value={form.name}
                         />
                         <ErrorMessage name="name" />
+                    </div>
+                    <hr />
+                    <div>
+                        <span>Idade</span>
+                        <br />
+                        <Field
+                        onChange={onChange}
+                        name="age"
+                        placeHolder="Sua idade"
+                        type="text"
+                        value={form.age}
+                        />
                     </div>
                     <hr />
                     <div>
@@ -113,7 +123,10 @@ const MeuForm = props => {
                         locale={br} 
                         dateFormat="dd/MM/yyyy"  
                         showYearDropdown
-                        showMonthDropdown/>
+                        showMonthDropdown
+                        name="age"
+                        value={form.age}
+                        />
                     </div>
                     <hr />
                     <div>
@@ -127,9 +140,11 @@ const MeuForm = props => {
                         minDate={dataAtual} 
                         dateFormat="dd/MM/yyyy HH'h'mm"
                         showYearDropdown
-                        showMonthDropdown/>
+                        showMonthDropdown
+                        value={form.date}
+                        />
                     </div>
-                    <Button className="mt-3" variant="success" type="submit"> Cadastrar </Button>
+                    <Button className="mt-3" variant="success" type="submit"> Agendar </Button>
                     <a className="btn btn-secondary ml-2 mt-3" href="/">Voltar</a>
                 </Form>
     )
