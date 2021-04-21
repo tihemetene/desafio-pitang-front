@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import List from '../List';
 import api from '../../util/api'
+import { Button } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 
-const Agendamentos = () => {
+const Agendamentos = ( {history} ) => {
 
   const remove = async (user) =>{
     try{
@@ -40,6 +40,9 @@ const Agendamentos = () => {
           <input
                 className="m-2"
                 type="checkbox"/>
+                <Button onClick={() => history.push(`/agendamento/${user._id}`)}>
+            Editar
+          </Button>
           <span onClick={() => remove(user)} variant="danger" className="ml-4">🗑</span>               
         </>
       ),

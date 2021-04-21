@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DatePicker, {registerLocale} from 'react-datepicker'
-import { withFormik, Field, ErrorMessage, Form } from 'formik'
+import { useFormik, Formik } from 'formik'
 import { Button } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,144 +11,119 @@ import br from 'date-fns/locale/pt-BR'
 
 registerLocale("br", br)
 
-const schema = Yup.object().shape({
-    cpf: Yup.string()
-        .required('Informe o CPF!').length(11, 'CPF inválido!'),
-    name: Yup.string()
-        .required('Nome obrigatório.')
-        .min(1, 'Nome deve conter mais que um caractere.')
-        .max(100, 'Nome deve conter menos que 100 caracteres'),
-    age: Yup.number()
-        .default(function () {return new Date();})
-        .required('Inserção da idade é obrigatório.')
-        .min(0, 'Idade inválida')
-})
 
+const MeuForm = () => {
+    const [age, setAge] = useState(new Date());
+    const [date, setDate] = useState(new Date());
+    const formik = useFormik({
+        initialValues: {
+          cpf: '',
+          name: '',
+          age:  '',
+          date: '',
+        }, 
+        validationSchema: Yup.object({
+          cpf: Yup.string()
+            .max(11, 'Must be 15 characters or less')
+            .min(11, 'CPF inválido')
+            .required('Required'),
+          name: Yup.string()
+            .max(20, 'Must be 20 characters or less')
+            .required('Campo Obrigatório'),
+        }),
+        onSubmit: values => {
+          values["age"] = age;
+          values["date"] = date;  
+          console.log(values)
+          try{
+            axios.post('/user', values);
+            toast.success('Paciente agendado!')
+          }catch(error){
+           toast.warn('ops')
+          }
+          alert(JSON.stringify(values));
+        },
+       });
+       console.log(age)
 
-const comFormik = withFormik({
-    mapPropsToValues: () => ({ cpf: '', name: '', age: '' }),
-    handleSubmit: values => {
-        console.log(values)
-    },
-    isInitialValid: false,
-    validateOnChange: true,
-    validateOnBlur: true,
-    displayName: 'Formik',
-    validationSchema: schema
-})
-
-
-
-const MeuForm = props => {
-    const [startDateAge, setStartDateAge] = useState(new Date());
-    const [startDate, setStartDate] = useState(new Date());
-    const [form, setForm] = useState({
-         cpf: '', 
-         name: '', 
-         age: '', 
-         date :'',
-    })
-
-
-    const addForm = async (event) =>{
-        try{
-            await axios.post('/user', form);
-            toast.success('Paciente cadastrado!');
-            setForm('');
-        }catch(e){
-            toast.error(e.message);
-        }
-    }
-
-    const onChange = ({ target: { name, value } }) => {
-        setForm({
-          ...form,
-          [name]: value,
-        });
-      };
-
-    let dataAtual = new Date();
     let handleColor = time => {
         return time.getHours() >= 8 && time.getHours()  < 18 ? "text-success" : "text-muted";
       };
 
 
     return (
-                <Form onSubmit={addForm}>
+        <Formik>
+            {({ values, setFieldValue })=>(
+                <form onSubmit={formik.handleSubmit}>
                     <div>
                         <span>CPF</span>
                         <br />
-                        <Field
-                            onChange={onChange}
-                            name="cpf"
-                            placeholder="CPF"
-                            type="text"
-                            value={form.cpf}
+                        <input
+                             id="cpf"
+                             name="cpf"
+                             type="text"
+                             placeholder="CPF"
+                             onChange={formik.handleChange}
+                             onBlur={formik.handleBlur}
+                             value={formik.values.cpf}
                         />
-                        <ErrorMessage className="ml-2" style={{color: "red"}} name="cpf" />
-                    </div>
-                    
+                        {formik.touched.cpf && formik.errors.cpf ? (
+                        <div>{formik.errors.cpf}</div>
+                        ) : null} 
+                    </div>                    
                     <hr />
                     <div>
-                        <span>Nome</span>
+                        <span>Nome completo</span>
                         <br />
-                        <Field
-                            onChange={onChange}
-                            name="name"
-                            placeHolder="Seu nome"
-                            type="text"
-                            value={form.name}
+                        <input
+                             id="name"
+                             name="name"
+                             type="text"
+                             placeholder="Seu nome aqui"
+                             onChange={formik.handleChange}
+                             onBlur={formik.handleBlur}
+                             value={formik.values.name}
                         />
-                        <ErrorMessage name="name" />
+                        {formik.touched.name && formik.errors.name ? (
+                        <div>{formik.errors.name}</div>
+                        ) : null}  
                     </div>
-                    <hr />
-                    <div>
-                        <span>Idade</span>
-                        <br />
-                        <Field
-                        onChange={onChange}
-                        name="age"
-                        placeHolder="Sua idade"
-                        type="text"
-                        value={form.age}
-                        />
-                    </div>
-                    <hr />
+                    <hr />                   
                     <div>
                         <span>Idade</span>
                         <br />
                         <DatePicker
-                        selected={startDateAge} 
-                        onChange={date => setStartDateAge(date)}
+                        name="age"
+                        selected={age} 
+                        onChange={date => setAge(date)}
                         locale={br} 
                         dateFormat="dd/MM/yyyy"  
                         showYearDropdown
+                        scrollableYearDropdown
                         showMonthDropdown
-                        name="age"
-                        value={form.age}
                         />
                     </div>
                     <hr />
                     <div>
                         <span className="mr-2">Data da vacinação</span>
-                        <DatePicker 
-                        selected={startDate}
-                        onChange={date => setStartDate(date)} 
+                        <DatePicker
+                        name="date" 
+                        selected={date}
+                        onChange={date => setDate(date)} 
                         locale={br}                        
                         showTimeSelect                     
                         timeClassName={handleColor} 
-                        minDate={dataAtual} 
-                        dateFormat="dd/MM/yyyy HH'h'mm"
-                        showYearDropdown
-                        showMonthDropdown
-                        value={form.date}
+                        minDate={new Date()} 
+                        dateFormat="dd/MM/yyyy HH'h'mm"                       
                         />
                     </div>
                     <Button className="mt-3" variant="success" type="submit"> Agendar </Button>
                     <a className="btn btn-secondary ml-2 mt-3" href="/">Voltar</a>
-                </Form>
-    )
+                </form>
+                )}
+                </Formik>
+                );
 };
 
-export default comFormik(MeuForm);
+export default MeuForm;
 

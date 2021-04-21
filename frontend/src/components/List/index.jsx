@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import axios from '../../util/api'
