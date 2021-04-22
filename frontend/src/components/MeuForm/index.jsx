@@ -8,43 +8,86 @@ import '../../styles/global.css'
 import * as Yup from 'yup';
 import axios from '../../util/api'
 import br from 'date-fns/locale/pt-BR'
-
 registerLocale("br", br)
 
+
+ function idade(dateString) {
+   var today = new Date();
+   var birthDate = new Date(dateString);
+   var age = today.getFullYear() - birthDate.getFullYear();
+   var m = today.getMonth() - birthDate.getMonth();
+   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+       age--;
+   }
+   return age;
+ }
+
+ function isIdoso(age){
+   if(age > 59){
+     return true
+   }else{
+     return false;
+   }
+ }
+ 
 
 const MeuForm = () => {
     const [age, setAge] = useState(new Date());
     const [date, setDate] = useState(new Date());
+    const [hour, setHour] = useState(new Date());
+    const notify = () => toast.success('Paciente Cadastrado!');
+
     const formik = useFormik({
         initialValues: {
           cpf: '',
           name: '',
           age:  '',
           date: '',
+          hour: '',
         }, 
         validationSchema: Yup.object({
           cpf: Yup.string()
-            .max(11, 'Must be 15 characters or less')
+            .matches((/^\d+$/), 'CPF inválido')
+            .max(11, 'CPF inválido')
             .min(11, 'CPF inválido')
-            .required('Required'),
+            .required('Campo obrigatório'),
           name: Yup.string()
-            .max(20, 'Must be 20 characters or less')
-            .required('Campo Obrigatório'),
+            .max(30, 'Campo nome deve conter no máximo 30 caracteres')
+            .required('Campo obrigatório'),
+           
         }),
-        onSubmit: values => {
-          values["age"] = age;
-          values["date"] = date;  
-          console.log(values)
+        onSubmit: async (values, event) => {
+
           try{
-            axios.post('/user', values);
-            toast.success('Paciente agendado!')
+            values["age"] = idade(age);
+            values["date"] = date;
+            values["hour"] = hour;  
+            console.log(values)
+            const resDate = axios.get(`/marcados/${date}`)
+            const resHora = axios.get(`/marcados/${hour}`)
+            if(resDate > 20){
+              toast.warning('Limite de vagas excedido no dia.')
+            }
+            if(resHora > 2){
+              toast.warning('Limite de vagas neste horário.')
+            }
+            
+            await axios.post('/user', {
+              cpf: formik.values.cpf,
+              name: formik.values.name,
+              age: idade(age),
+              date: date,
+              hour: hour,
+              isIdoso: isIdoso(idade(age)),
+            });
+            notify();
+            alert(JSON.stringify(values));
           }catch(error){
-           toast.warn('ops')
+           toast.error('Erro ao agendar. Verifique se o CPF já não foi cadastrado.')
           }
-          alert(JSON.stringify(values));
         },
        });
-       console.log(age)
+       console.log(idade(age))
 
     let handleColor = time => {
         return time.getHours() >= 8 && time.getHours()  < 18 ? "text-success" : "text-muted";
@@ -97,10 +140,12 @@ const MeuForm = () => {
                         selected={age} 
                         onChange={date => setAge(date)}
                         locale={br} 
-                        dateFormat="dd/MM/yyyy"  
-                        showYearDropdown
-                        scrollableYearDropdown
+                        dateFormat="dd/MM/yyyy"
+                        maxDate={(new Date())}  
+                        showYearDropdown                      
                         showMonthDropdown
+                        withPortal
+                        dropdownMode="select"
                         />
                     </div>
                     <hr />
@@ -110,13 +155,26 @@ const MeuForm = () => {
                         name="date" 
                         selected={date}
                         onChange={date => setDate(date)} 
-                        locale={br}                        
-                        showTimeSelect                     
+                        locale={br}                                            
                         timeClassName={handleColor} 
                         minDate={new Date()} 
-                        dateFormat="dd/MM/yyyy HH'h'mm"                       
+                        dateFormat="dd/MM/yyyy"
+                        withPortal                       
                         />
                     </div>
+                    <hr />
+                    <div>
+                    <DatePicker
+                        name="hour"
+                        selected={hour} 
+                        onChange={hour => setHour(hour)}
+                        showTimeSelect
+                        showTimeSelectOnly 
+                        dateFormat="h:mm"
+                        withPortal
+                        />
+                    </div>
+                    <hr />   
                     <Button className="mt-3" variant="success" type="submit"> Agendar </Button>
                     <a className="btn btn-secondary ml-2 mt-3" href="/">Voltar</a>
                 </form>

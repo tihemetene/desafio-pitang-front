@@ -2,7 +2,14 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 
+
 const TableComponent = ({ columns = [], rows = [] }) => {
+  // columns.sort(function(a,b){
+  //   // Turn your strings into dates, and then subtract them
+  //   // to get a value that is either negative, positive, or zero.
+  //   return new Date(b.date) - new Date(a.date);
+  // });
+
   return (
     <Table>
       <thead>

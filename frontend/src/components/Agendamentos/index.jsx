@@ -1,8 +1,10 @@
 import React from 'react';
-import List from '../List';
+import List from '../ListagemAgendamentos';
 import api from '../../util/api'
+import '../../styles/global.css'
 import { Button } from 'react-bootstrap'
 import { toast } from 'react-toastify';
+import { BsTrash } from 'react-icons/bs'
 
 const Agendamentos = ( {history} ) => {
 
@@ -33,6 +35,10 @@ const Agendamentos = ( {history} ) => {
       value: 'Data',
     },
     {
+      id: 'hour',
+      value: 'Hora',
+    },
+    {
       id: 'action',
       value: 'Status',
       render: (_, user) => (
@@ -40,10 +46,7 @@ const Agendamentos = ( {history} ) => {
           <input
                 className="m-2"
                 type="checkbox"/>
-                <Button onClick={() => history.push(`/agendamento/${user._id}`)}>
-            Editar
-          </Button>
-          <span onClick={() => remove(user)} variant="danger" className="ml-4">🗑</span>               
+          <BsTrash onClick={() => remove(user)} className="ml-4 mb-3 icons"></BsTrash>            
         </>
       ),
     },

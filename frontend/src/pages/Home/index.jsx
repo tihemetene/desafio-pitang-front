@@ -1,6 +1,6 @@
 import React from 'react'
 import CardInicial from '../../components/Card'
-import { Card, Container, Row } from 'react-bootstrap'
+import { Card, Container, Row, Image } from 'react-bootstrap'
 
 const Home = () =>
 (
@@ -10,9 +10,10 @@ const Home = () =>
         >
             <Card.Body>
                 <Row>
-                    <span>Bem vindo ao portal MediHouse para o agendamento da vacinação! Escolha a opção abaixo caso queira realizar um 
-                        agendamento ou se for um enfermeiro!</span>
+                    <h4>Bem vindo ao portal MediHouse para o agendamento da vacinação! Escolha a opção abaixo caso queira realizar um 
+                        agendamento ou caso seja um enfermeiro.</h4>
                 </Row>
+                <Image size="100x100" src="https://www.keckmedicine.org/wp-content/uploads/2020/12/covid-vaccine.png"></Image>
                 <Row>
                     <Card.Link href="/user-access">Acesso paciente</Card.Link>
                     <Card.Link href="/nurse-access">Acesso Enfermeiro</Card.Link>
