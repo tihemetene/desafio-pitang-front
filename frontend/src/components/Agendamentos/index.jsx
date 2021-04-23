@@ -1,42 +1,37 @@
 import React, {useState} from 'react';
 import List from '../ListagemAgendamentos';
-import MeuModal from '../Modal';
-import api from '../../util/api';
+import axios from '../../util/api';
 import '../../styles/global.css';
-import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { BsTrash } from 'react-icons/bs';
-import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im'
-import axios from 'axios';
+import { IoMdAdd } from 'react-icons/io'
 
-const Agendamentos = ( event ) => {
-const [modalShow, setModalShow] = useState(false);
-const [check, setCheck] = useState(false)
+const Agendamentos = ({history}) => {
+const [reloadCount, setReloadCount] = useState(0);
 
   const checkComplete = async (user) => {
-    setCheck(true);
-    const res = await api.get(`/user/${user._id}`);
-    try{
-      await api.put(`/user/${user._id}`, {
-        cpf: res.data.cpf,
-        name: res.data.name,
-        age: res.age.age,
-        date: res.data.date,
-        hour: res.data.hour,
-        isIdoso: res.data.isIdoso,
-        isAtendido: true,
-      });
-      setCheck(false)
-      alert('marcado')
-    }catch(e){
-      toast.error('Falha ao marcar')
-    }
+      try{
+        await axios.put(`/user/${user._id}`, {
+          cpf: user.cpf,
+          name: user.name,
+          age: user.age,
+          date: user.date,
+          hour: user.hour,
+          isIdoso: user.isIdoso,
+          isAtendido: 'Vacinado',
+        });
+        setReloadCount(reloadCount + 1)
+      }catch(e){
+        toast.error('Falha ao marcar')
+      }
+    
   }
 
   const remove = async (user) =>{
     try{
-      await api.delete(`/user/${user._id}`);
+      await axios.delete(`/user/${user._id}`);
       toast.warn("Removido.")
+      setReloadCount(reloadCount + 1);
     }catch(e){
       toast.error('Falha ao remover');
     }
@@ -64,17 +59,15 @@ const [check, setCheck] = useState(false)
       value: 'Hora',
     },
     {
-      id: 'status',
+      id: 'isAtendido',
       value: 'Status',
+    },
+    {
+      id: 'status',
+      value: '',
       render: (_, user) => (
         <>
-        {check ? (
-          <ImCheckboxUnchecked onClick={() => checkComplete(user)}/>
-        ) : <ImCheckboxChecked onClick={() => checkComplete(user)}/>}
-          <Button
-                className="m-2"
-                type="checkbox"
-                onClick={() => checkComplete(user)}>teste</Button>
+          <IoMdAdd className="mt-2 icons" onClick={() => checkComplete(user)}/>
         </>
       ),
     }, 
@@ -83,10 +76,9 @@ const [check, setCheck] = useState(false)
       value: 'Ações',
       render: (_, user) => (
         <>
-                <Button onClick={() => setModalShow(true)}>
-            Edit
-          </Button>
-          <MeuModal title="Comentar agendamento" show={modalShow} />
+          <a className="btn btn-primary" href={`/agendamento/${user._id}`}>
+            Add Nota
+            </a>
           <BsTrash onClick={() => remove(user)} className="ml-4 mb-3 mt-3 icons"></BsTrash>            
         </>
       ),
@@ -95,6 +87,7 @@ const [check, setCheck] = useState(false)
 
   return (
     <List
+      reloadCount={reloadCount}
       columns={columns}
       endpoint="/user"
     />

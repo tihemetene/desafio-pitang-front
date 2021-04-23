@@ -4,7 +4,7 @@ import { Spinner } from 'react-bootstrap';
 import axios from '../../util/api'
 import TableComponent from '../Table'
 
-const List = ({ columns, endpoint}) => {
+const List = ({ columns, endpoint, reloadCount}) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +21,7 @@ const List = ({ columns, endpoint}) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [reloadCount]);
 
   return (
         <>

@@ -13,10 +13,10 @@ const Home = () =>
                     <h4>Bem vindo ao portal MediHouse para o agendamento da vacinação! Escolha a opção abaixo caso queira realizar um 
                         agendamento ou caso seja um enfermeiro.</h4>
                 </Row>
-                <Image size="100x100" src="https://www.keckmedicine.org/wp-content/uploads/2020/12/covid-vaccine.png"></Image>
+                <Image src="https://www.keckmedicine.org/wp-content/uploads/2020/12/covid-vaccine.png"></Image>
                 <Row>
-                    <Card.Link href="/user-access">Acesso paciente</Card.Link>
-                    <Card.Link href="/nurse-access">Acesso Enfermeiro</Card.Link>
+                    <Card.Link href="/agendamento/new">Acesso paciente</Card.Link>
+                    <Card.Link href="/agendamento">Acesso Enfermeiro</Card.Link>
                 </Row>
             </Card.Body>
         </CardInicial>

@@ -30,12 +30,12 @@ registerLocale("br", br)
      return false;
    }
  }
- 
 
+ 
 const MeuForm = () => {
     const [age, setAge] = useState(new Date());
     const [date, setDate] = useState(new Date());
-    const [hour, setHour] = useState(new Date());
+    const [hour, setHour] = useState(new Date());   
 
     const formik = useFormik({
         initialValues: {
@@ -53,7 +53,8 @@ const MeuForm = () => {
             .required('Campo obrigatório'),
           name: Yup.string()
             .matches(/^[aA-zZ\s]+$/, 'Campo nome não permite símbolos diferentes de letras')
-            .max(30, 'Campo nome deve conter no máximo 30 caracteres')
+            .min(2, 'Campo nome deve conter no mínimo 2 caracteres')
+            .max(50, 'Campo nome deve conter no máximo 50 caracteres')
             .required('Campo obrigatório'),
            
         }),
@@ -80,7 +81,8 @@ const MeuForm = () => {
                   date: moment(date).format('DD-MM-YYYY'),
                   hour: moment(hour).format('h:mm a'),
                   isIdoso: isIdoso(idade(age)),
-                  isAtendido: false,
+                  isAtendido: 'Não vacinado',
+                  note: 'N/V',
                 });
                 toast.success('Paciente cadastrado com sucesso!');
                 alert(JSON.stringify(values));
@@ -91,8 +93,6 @@ const MeuForm = () => {
           }
         },
        });
-       console.log(moment(age).format('ddd, hA'))
-       console.log(idade(age))
 
     let handleColor = time => {
         return time.getHours() >= 8 && time.getHours()  < 18 ? "text-success" : "text-muted";
@@ -116,7 +116,7 @@ const MeuForm = () => {
                              value={formik.values.cpf}
                         />
                         {formik.touched.cpf && formik.errors.cpf ? (
-                        <div>{formik.errors.cpf}</div>
+                        <div style={{ color: "red" }}>{formik.errors.cpf}</div>
                         ) : null} 
                     </div>                    
                     <hr />
@@ -133,7 +133,7 @@ const MeuForm = () => {
                              value={formik.values.name}
                         />
                         {formik.touched.name && formik.errors.name ? (
-                        <div>{formik.errors.name}</div>
+                        <div style={{ color: "red" }}>{formik.errors.name}</div>
                         ) : null}  
                     </div>
                     <hr />                   
