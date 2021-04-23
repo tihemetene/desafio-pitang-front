@@ -31,8 +31,7 @@ registerLocale("br", br)
    }
  }
 
- 
-const MeuForm = ({history}) => {
+const MeuForm = () => {
     const [age, setAge] = useState(new Date());
     const [date, setDate] = useState(new Date());
     const [hour, setHour] = useState(new Date());   
@@ -55,20 +54,18 @@ const MeuForm = ({history}) => {
             .matches(/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/, 'Campo nome não permite símbolos diferentes de letras')
             .min(2, 'Campo nome deve conter no mínimo 2 caracteres')
             .max(50, 'Campo nome deve conter no máximo 50 caracteres')
-            .required('Campo obrigatório'),  
-           
+            .required('Campo obrigatório'),
+          age: Yup.string(),  
+          date: Yup.string(),
+          hour: Yup.string(), 
         }),
         onSubmit: async (values) => {
           const response = await axios.get(`/agendamentos/${moment(date).format('DD-MM-YYYY')}/${moment(hour).format('h:mm a')}`);
-          console.log(date)
           const { data } = response.data;
-          console.log(response.data)
-          console.log(data)
           if (data >= 2){
             toast.warning("Limite de agendamentos nesse horário.")
           }else{
             const response = await axios.get(`/agendamentos/${moment(date).format('DD-MM-YYYY')}`);
-            console.log(response.data)
             const { data } = response.data;
             if (data >= 20){
               toast.warning("Foi alcançado o limite de 20 agendamentos nesse dia.");            
@@ -82,10 +79,9 @@ const MeuForm = ({history}) => {
                   hour: moment(hour).format('h:mm a'),
                   isIdoso: isIdoso(idade(age)),
                   isAtendido: 'Não vacinado',
-                  note: 'N/V',
+                  note: '',
                 });
                 toast.success('Paciente cadastrado com sucesso!');
-                alert(JSON.stringify(values));
               }catch(error){
                toast.error('Erro ao agendar. Verifique se o CPF já não foi cadastrado.')
               }            
@@ -94,12 +90,6 @@ const MeuForm = ({history}) => {
         },
        });
 
-    let handleColor = time => {
-        return time.getHours() >= 8 && time.getHours()  < 18 ? "text-success" : "text-muted";
-      };
-
-    console.log(`Data: ${date}`);
-    console.log(`Hora: ${hour}`);
     return (
         <Formik>
             {()=>(
@@ -139,11 +129,11 @@ const MeuForm = ({history}) => {
                     </div>
                     <hr />                   
                     <div>
-                        <span>Idade</span>
+                        <span>Data de nascimento</span>
                         <br />
                         <DatePicker
                         name="age"
-                        selected={age} 
+                        selected={age}  
                         onChange={date => setAge(date)}
                         locale={br} 
                         dateFormat="dd/MM/yyyy"
@@ -153,6 +143,9 @@ const MeuForm = ({history}) => {
                         withPortal
                         dropdownMode="select"
                         />
+                        {formik.touched.age && formik.errors.age ? (
+                        <div style={{ color: "red" }}>{formik.errors.age}</div>
+                        ) : null}  
                     </div>
                     <hr />
                     <div>
@@ -162,11 +155,13 @@ const MeuForm = ({history}) => {
                         selected={date}
                         onChange={date => setDate(date)} 
                         locale={br}                                            
-                        timeClassName={handleColor} 
                         minDate={new Date()} 
                         dateFormat="dd/MM/yyyy"
                         withPortal                       
                         />
+                        {formik.touched.date && formik.errors.date ? (
+                        <div style={{ color: "red" }}>{formik.errors.date}</div>
+                        ) : null}
                     </div>
                     <div className="mt-1">
                     <DatePicker
@@ -179,6 +174,9 @@ const MeuForm = ({history}) => {
                         dateFormat="h:mm"
                         withPortal
                         />
+                        {formik.touched.hour && formik.errors.hour ? (
+                        <div style={{ color: "red" }}>{formik.errors.hour}</div>
+                        ) : null}
                     </div>
                     <hr />   
                     <Button className="mt-3" variant="success" type="submit"> Agendar </Button>
@@ -188,10 +186,7 @@ const MeuForm = ({history}) => {
                 </Formik>
                 );
                 
-
 };
-
-
 
 export default MeuForm;
 

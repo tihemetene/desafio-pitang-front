@@ -77,7 +77,7 @@ const [reloadCount, setReloadCount] = useState(0);
       render: (_, user) => (
         <>
           <a className="btn btn-outline-primary" href={`/agendamento/${user._id}`}>
-            Add Nota
+            Nota
             </a>
           <BsTrash onClick={() => remove(user)} className="ml-4 mb-3 mt-3 icons"></BsTrash>            
         </>
@@ -89,7 +89,6 @@ const [reloadCount, setReloadCount] = useState(0);
     <List
       reloadCount={reloadCount}
       columns={columns}
-      endpoint="/user"
     />
   );
 };

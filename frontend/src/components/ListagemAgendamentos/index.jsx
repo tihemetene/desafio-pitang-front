@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import axios from '../../util/api'
 import TableComponent from '../Table'
+import { toast } from 'react-toastify'
 
 const List = ({ columns, reloadCount}) => {
   const [rows, setRows] = useState([]);
@@ -12,11 +13,10 @@ const List = ({ columns, reloadCount}) => {
     setLoading(true);
     try{
       const response = await axios.get('/user');
-      console.log(response.data.data);
       setRows(response.data.data);
       setLoading(false);
     }catch(e){
-      console.log("Falha na requisição")
+      toast.error("Falha na requisição")
     }
   }
 

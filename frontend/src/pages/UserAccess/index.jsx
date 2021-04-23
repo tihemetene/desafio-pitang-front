@@ -41,8 +41,9 @@ const onSubmit = async (event) => {
             isIdoso: res.data.isIdoso,
             note: form.note,
         })
+        toast.info('Nota adicionada')
     }catch(e){
-        toast.warning('Falha')
+        toast.warning('Falha ao adicionar nota')
     }
 }
 
