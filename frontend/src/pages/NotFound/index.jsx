@@ -1,7 +1,7 @@
 import React from 'react'
 import CardInicial from '../../components/Card'
 import { Container, Image, Button } from 'react-bootstrap'
-import feno from '../../components/Images/feno.gif'
+import feno from '../../Assets/Images/feno.gif'
 
 
 export default function index({history}) {

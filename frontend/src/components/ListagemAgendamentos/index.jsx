@@ -4,14 +4,15 @@ import { Spinner } from 'react-bootstrap';
 import axios from '../../util/api'
 import TableComponent from '../Table'
 
-const List = ({ columns, endpoint, reloadCount}) => {
+const List = ({ columns, reloadCount}) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () =>{
     setLoading(true);
     try{
-      const response = await axios.get(endpoint);
+      const response = await axios.get('/user');
+      console.log(response.data.data);
       setRows(response.data.data);
       setLoading(false);
     }catch(e){

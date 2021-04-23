@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { BsTrash } from 'react-icons/bs';
 import { IoMdAdd } from 'react-icons/io'
 
-const Agendamentos = ({history}) => {
+const Agendamentos = () => {
 const [reloadCount, setReloadCount] = useState(0);
 
   const checkComplete = async (user) => {

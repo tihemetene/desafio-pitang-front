@@ -9,8 +9,8 @@ const TableComponent = ({ columns = [], rows = [] }) => {
     <Table>
       <thead>
         <tr>
-          {columns.map((column) => (
-            <th key={column.id}>{column.value}</th>
+          {columns.map((column) => (         
+            <th key={column.id}>{column.value}</th>            
           ))}
         </tr>
       </thead>

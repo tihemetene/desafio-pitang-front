@@ -1,7 +1,7 @@
 import React from 'react'
 import CardInicial from '../../components/Card'
 import { Card, Container, Row, Image } from 'react-bootstrap'
-import imgVacina from '../../components/Images/covid-vaccine.png'
+import imgVacina from '../../Assets/Images/covid-vaccine.png'
 
 const Home = () =>
 (
