@@ -1,13 +1,13 @@
 import React from 'react'
-import { Container } from 'react-bootstrap'
+import { Container, Button } from 'react-bootstrap'
 import CardInicial from '../../components/Card'
 import Agendamentos from '../../components/Agendamentos'
 
-export default function index() {
+export default function index( {history} ) {
     return (
 <Container className="mt-4">
       <CardInicial title="Lista de agendamentos">
-                <a className="btn btn-secondary ml-2 mb-2" href="/">Voltar</a>
+                <Button variant="secondary" className="ml-2 mb-2" onClick={()=> history.push('/')}>Voltar</Button>
                 <Agendamentos />
             </CardInicial>
         </Container>

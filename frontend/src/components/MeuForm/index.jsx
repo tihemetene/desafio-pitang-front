@@ -8,6 +8,7 @@ import '../../styles/global.css'
 import * as Yup from 'yup';
 import axios from '../../util/api'
 import br from 'date-fns/locale/pt-BR'
+import moment from 'moment'
 registerLocale("br", br)
 
 
@@ -35,7 +36,6 @@ const MeuForm = () => {
     const [age, setAge] = useState(new Date());
     const [date, setDate] = useState(new Date());
     const [hour, setHour] = useState(new Date());
-    const notify = () => toast.success('Paciente Cadastrado!');
 
     const formik = useFormik({
         initialValues: {
@@ -52,41 +52,46 @@ const MeuForm = () => {
             .min(11, 'CPF inválido')
             .required('Campo obrigatório'),
           name: Yup.string()
+            .matches(/^[aA-zZ\s]+$/, 'Campo nome não permite símbolos diferentes de letras')
             .max(30, 'Campo nome deve conter no máximo 30 caracteres')
             .required('Campo obrigatório'),
            
         }),
-        onSubmit: async (values, event) => {
-
-          try{
-            values["age"] = idade(age);
-            values["date"] = date;
-            values["hour"] = hour;  
-            console.log(values)
-            const resDate = axios.get(`/marcados/${date}`)
-            const resHora = axios.get(`/marcados/${hour}`)
-            if(resDate > 20){
-              toast.warning('Limite de vagas excedido no dia.')
+        onSubmit: async (values) => {
+          const response = await axios.get(`/agendamentos/${moment(date).format('DD-MM-YYYY')}/${moment(hour).format('h:mm a')}`);
+          console.log(date)
+          const { data } = response.data;
+          console.log(response.data)
+          console.log(data)
+          if (data >= 2){
+            toast.warning("Limite de agendamentos nesse horário.")
+          }else{
+            const response = await axios.get(`/agendamentos/${moment(date).format('DD-MM-YYYY')}`);
+            console.log(response.data)
+            const { data } = response.data;
+            if (data >= 20){
+              toast.warning("Foi alcançado o limite de 20 agendamentos nesse dia.");            
+            }else{
+              try{          
+                  await axios.post('/user', {
+                  cpf: formik.values.cpf,
+                  name: formik.values.name,
+                  age: idade(age),
+                  date: moment(date).format('DD-MM-YYYY'),
+                  hour: moment(hour).format('h:mm a'),
+                  isIdoso: isIdoso(idade(age)),
+                  isAtendido: false,
+                });
+                toast.success('Paciente cadastrado com sucesso!');
+                alert(JSON.stringify(values));
+              }catch(error){
+               toast.error('Erro ao agendar. Verifique se o CPF já não foi cadastrado.')
+              }            
             }
-            if(resHora > 2){
-              toast.warning('Limite de vagas neste horário.')
-            }
-            
-            await axios.post('/user', {
-              cpf: formik.values.cpf,
-              name: formik.values.name,
-              age: idade(age),
-              date: date,
-              hour: hour,
-              isIdoso: isIdoso(idade(age)),
-            });
-            notify();
-            alert(JSON.stringify(values));
-          }catch(error){
-           toast.error('Erro ao agendar. Verifique se o CPF já não foi cadastrado.')
           }
         },
        });
+       console.log(moment(age).format('ddd, hA'))
        console.log(idade(age))
 
     let handleColor = time => {
@@ -150,7 +155,7 @@ const MeuForm = () => {
                     </div>
                     <hr />
                     <div>
-                        <span className="mr-2">Data da vacinação</span>
+                        <span className="mr-2">Data e hora da vacinação</span>
                         <DatePicker
                         name="date" 
                         selected={date}
@@ -162,21 +167,21 @@ const MeuForm = () => {
                         withPortal                       
                         />
                     </div>
-                    <hr />
-                    <div>
+                    <div className="mt-1">
                     <DatePicker
                         name="hour"
                         selected={hour} 
                         onChange={hour => setHour(hour)}
                         showTimeSelect
-                        showTimeSelectOnly 
+                        showTimeSelectOnly
+                        timeIntervals={60} 
                         dateFormat="h:mm"
                         withPortal
                         />
                     </div>
                     <hr />   
                     <Button className="mt-3" variant="success" type="submit"> Agendar </Button>
-                    <a className="btn btn-secondary ml-2 mt-3" href="/">Voltar</a>
+                    <a className="btn btn-outline-secondary ml-2 mt-3" href="/">Voltar</a>
                 </form>
                 )}
                 </Formik>

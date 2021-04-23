@@ -19,13 +19,6 @@ span{
     size: 30 30;
 }
 
-
-
-
-Image{
-    width: 150px;
-    height: 150px;
-}
 ErrorMessage{
     color: red!important;
 }
