@@ -15,10 +15,19 @@ span{
 }
 
 .icons{
+    transition: 2s;
     cursor: pointer;
     size: 30 30;
 }
 
-ErrorMessage{
-    color: red!important;
+.icons:hover{
+    transform: scale(1.2);
 }
+
+.center{
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+

@@ -32,7 +32,7 @@ registerLocale("br", br)
  }
 
  
-const MeuForm = () => {
+const MeuForm = ({history}) => {
     const [age, setAge] = useState(new Date());
     const [date, setDate] = useState(new Date());
     const [hour, setHour] = useState(new Date());   
@@ -52,10 +52,10 @@ const MeuForm = () => {
             .min(11, 'CPF inválido')
             .required('Campo obrigatório'),
           name: Yup.string()
-            .matches(/^[aA-zZ\s]+$/, 'Campo nome não permite símbolos diferentes de letras')
+            .matches(/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/, 'Campo nome não permite símbolos diferentes de letras')
             .min(2, 'Campo nome deve conter no mínimo 2 caracteres')
             .max(50, 'Campo nome deve conter no máximo 50 caracteres')
-            .required('Campo obrigatório'),
+            .required('Campo obrigatório'),  
            
         }),
         onSubmit: async (values) => {
@@ -98,10 +98,11 @@ const MeuForm = () => {
         return time.getHours() >= 8 && time.getHours()  < 18 ? "text-success" : "text-muted";
       };
 
-
+    console.log(`Data: ${date}`);
+    console.log(`Hora: ${hour}`);
     return (
         <Formik>
-            {({ values, setFieldValue })=>(
+            {()=>(
                 <form onSubmit={formik.handleSubmit}>
                     <div>
                         <span>CPF</span>
@@ -186,7 +187,11 @@ const MeuForm = () => {
                 )}
                 </Formik>
                 );
+                
+
 };
+
+
 
 export default MeuForm;
 

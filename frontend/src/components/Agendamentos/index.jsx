@@ -76,7 +76,7 @@ const [reloadCount, setReloadCount] = useState(0);
       value: 'Ações',
       render: (_, user) => (
         <>
-          <a className="btn btn-primary" href={`/agendamento/${user._id}`}>
+          <a className="btn btn-outline-primary" href={`/agendamento/${user._id}`}>
             Add Nota
             </a>
           <BsTrash onClick={() => remove(user)} className="ml-4 mb-3 mt-3 icons"></BsTrash>            
