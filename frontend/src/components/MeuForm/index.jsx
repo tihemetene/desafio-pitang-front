@@ -10,6 +10,7 @@ import axios from '../../util/api'
 import br from 'date-fns/locale/pt-BR'
 import moment from 'moment'
 registerLocale("br", br)
+moment.locale('pt-br');
 
 
  function idade(dateString) {
@@ -60,7 +61,7 @@ const MeuForm = () => {
           hour: Yup.string(), 
         }),
         onSubmit: async () => {
-          const response = await axios.get(`/agendamentos/${moment(date).format('MM-DD-YYYY')}/${moment(hour).format('h:mm a')}`);
+          const response = await axios.get(`/agendamentos/${moment(date).format('MM-DD-YYYY')}/${moment(hour).format('HH:mm')}`);
           const { data } = response.data;
           if (data >= 2){
             toast.warning("Limite de agendamentos nesse horário.")
@@ -76,7 +77,7 @@ const MeuForm = () => {
                   name: formik.values.name,
                   age: idade(age),
                   date: moment(date).format('MM-DD-YYYY'),
-                  hour: moment(hour).format('h:mm a'),
+                  hour: moment(hour).format('HH:mm'),
                   isIdoso: isIdoso(idade(age)),
                   isAtendido: 'Não vacinado',
                   note: '',
@@ -167,11 +168,12 @@ const MeuForm = () => {
                     <DatePicker
                         name="hour"
                         selected={hour} 
+                        locale={br}
                         onChange={hour => setHour(hour)}
                         showTimeSelect
                         showTimeSelectOnly
                         timeIntervals={60} 
-                        dateFormat="h:mm"
+                        dateFormat="hh:mm"
                         withPortal
                         />
                         {formik.touched.hour && formik.errors.hour ? (
