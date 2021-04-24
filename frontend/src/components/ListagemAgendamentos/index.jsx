@@ -9,11 +9,18 @@ const List = ({ columns, reloadCount}) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
+
+
   const fetchData = async () =>{
     setLoading(true);
     try{
-      const response = await axios.get('/user');
-      setRows(response.data.data);
+      const res = await axios.get('/user');
+      //função para ordenar datas e horários
+      res.data.data.sort(function (a, b){
+        return a.date.localeCompare(b.date) || a.hour.localeCompare(b.hour);
+      });
+      
+      setRows(res.data.data);
       setLoading(false);
     }catch(e){
       toast.error("Falha na requisição")

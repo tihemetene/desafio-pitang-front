@@ -2,11 +2,11 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 
-
 const TableComponent = ({ columns = [], rows = [] }) => {
 
   return (
-    <Table>
+   <>
+    <Table>     
       <thead>
         <tr>
           {columns.map((column) => (         
@@ -22,12 +22,14 @@ const TableComponent = ({ columns = [], rows = [] }) => {
                 {
                 column.render ? column.render(row[column.id], row) : row[column.id]
               }
+
               </td>
             ))}
           </tr>
         ))}
       </tbody>
     </Table>
+    </>
   );
 }
 

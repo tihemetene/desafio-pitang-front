@@ -56,8 +56,6 @@ const onChange = (event) => {
     });
 };
 
-console.log(`Note: ${form.note}`)
-console.log(id)
     return (
         <Container className="mt-4 page-user">
             <CardInicial title={isNewAgendamento ? 'Agendamento' : 'Adicionar/Editar nota'}>

@@ -59,13 +59,13 @@ const MeuForm = () => {
           date: Yup.string(),
           hour: Yup.string(), 
         }),
-        onSubmit: async (values) => {
-          const response = await axios.get(`/agendamentos/${moment(date).format('DD-MM-YYYY')}/${moment(hour).format('h:mm a')}`);
+        onSubmit: async () => {
+          const response = await axios.get(`/agendamentos/${moment(date).format('MM-DD-YYYY')}/${moment(hour).format('h:mm a')}`);
           const { data } = response.data;
           if (data >= 2){
             toast.warning("Limite de agendamentos nesse horário.")
           }else{
-            const response = await axios.get(`/agendamentos/${moment(date).format('DD-MM-YYYY')}`);
+            const response = await axios.get(`/agendamentos/${moment(date).format('MM-DD-YYYY')}`);
             const { data } = response.data;
             if (data >= 20){
               toast.warning("Foi alcançado o limite de 20 agendamentos nesse dia.");            
@@ -75,7 +75,7 @@ const MeuForm = () => {
                   cpf: formik.values.cpf,
                   name: formik.values.name,
                   age: idade(age),
-                  date: moment(date).format('DD-MM-YYYY'),
+                  date: moment(date).format('MM-DD-YYYY'),
                   hour: moment(hour).format('h:mm a'),
                   isIdoso: isIdoso(idade(age)),
                   isAtendido: 'Não vacinado',

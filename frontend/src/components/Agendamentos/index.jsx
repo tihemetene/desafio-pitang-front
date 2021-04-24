@@ -52,7 +52,7 @@ const [reloadCount, setReloadCount] = useState(0);
     },
     {
       id: 'date',
-      value: 'Data',
+      value: 'Data (MM-DD-YYYY)',
     },
     {
       id: 'hour',
